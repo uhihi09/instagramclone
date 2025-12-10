@@ -1,5 +1,8 @@
-[build]
-builder = "NIXPACKS"
+[phases.setup]
+nixPkgs = ['maven', 'jdk17']
 
-[deploy]
-startCommand = "java -jar target/instagram-1.0.0.jar"
+[phases.build]
+cmds = ['mvn clean package -DskipTests']
+
+[start]
+cmd = 'java -Dserver.port=$PORT -jar target/*.jar'
