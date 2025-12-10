@@ -1,19 +1,24 @@
-# Stage 1: Build
+# Build stage
 FROM maven:3.9.5-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# pom.xml만 먼저 복사 (캐시 활용)
+# pom.xml과 소스 복사
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
-
-# 소스 코드 복사 & 빌드
 COPY src ./src
+
+# 빌드
 RUN mvn clean package -DskipTests
 
-# Stage 2: Run
+# Run stage
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
+
+# JAR 파일 복사
 COPY --from=build /app/target/*.jar app.jar
 
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# 환경변수
+ENV PORT=8080
+
+# 실행
+EXPOSE ${PORT}
+ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT} -jar app.jar"]
