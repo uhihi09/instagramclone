@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Instagram • 로그인</title>
+    <link rel="stylesheet" href="index.css" />
+    <style>
+        :root {
+            --bg: #fafafa;
+            --card: #fff;
+            --border: #dbdbdb;
+            --text: #262626;
+            --muted: #8e8e8e;
+            --primary: #0095f6;
+            --primary-600: #1877f2;
+            --danger: #b00020;
+            --radius: 8px;
+            --shadow: 0 1px 2px rgba(0,0,0,.04);
+        }
+
+        /* Base */
+        * { box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            margin: 0;
+            font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+            color: var(--text);
+            background: var(--bg);
+        }
+
+        /* Layout */
+        .container {
+            min-height: calc(100vh - 120px);
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 32px;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 16px;
+            width: min(935px, 100%);
+            margin: 0 auto;
+        }
+        .hero { display: flex; align-items: center; justify-content: center; }
+        .hero img { max-width: 440px; width: 100%; height: auto; border-radius: 24px; box-shadow: var(--shadow); }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 24px;
+        }
+        .login-card { padding-top: 32px; padding-bottom: 24px; }
+        .signup-card { margin-top: 10px; text-align: center; }
+
+        /* Logo (텍스트 로고) */
+        .logo {
+            margin: 0 0 24px;
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: .2px;
+            text-align: center;
+        }
+
+        /* Form */
+        .form { display: flex; flex-direction: column; gap: 8px; }
+        .field { display: block; }
+        .input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: #fafafa;
+            outline: none;
+        }
+        .input:focus { border-color: #b2b2b2; }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            border: 1px solid var(--border);
+            background: #efefef;
+            color: #000;
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .btn:disabled { opacity: .6; cursor: not-allowed; }
+        .btn-primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+            margin-top: 8px;
+        }
+        .btn-primary:hover { filter: brightness(0.98); }
+        .btn-loading { opacity: 0.8; pointer-events: none; }
+        .btn-facebook {
+            background: #fff;
+            border-color: var(--border);
+            color: var(--primary-600);
+            font-weight: 600;
+        }
+
+        /* Links & small text */
+        .link { color: #00376b; text-decoration: none; }
+        .link:hover { text-decoration: underline; }
+        .forgot { display: block; text-align: center; margin-top: 10px; color: var(--primary-600); }
+
+        /* Divider */
+        .divider {
+            position: relative;
+            text-align: center;
+            color: var(--muted);
+            margin: 16px 0 8px;
+            font-size: 12px;
+        }
+        .divider::before,
+        .divider::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: var(--border);
+        }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+
+        /* Alerts */
+        .status { margin-top: 8px; min-height: 20px; }
+        .alert {
+            margin-top: 8px; padding: 10px 12px; border-radius: 8px; font-size: 14px; border: 1px solid;
+        }
+        .alert-error { background: #fee; color: var(--danger); border-color: #f5c2c7; }
+        .alert-success { background: #eefaf0; color: #0f5132; border-color: #badbcc; }
+
+        /* Signup card */
+        .signup-card p { margin: 0; }
+        .signup-card .link { font-weight: 600; }
+
+        /* Footer */
+        .footer {
+            display: flex; flex-direction: column; align-items: center; gap: 10px;
+            padding: 24px 16px; color: var(--muted);
+        }
+        .footer .links { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+        .footer .link { color: var(--muted); font-size: 12px; }
+        .footer .meta { font-size: 12px; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; gap: 16px; }
+            .hero { display: none; }
+        }
+    </style>
+</head>
+<body>
+<main class="container">
+    <div class="hero">
+        <img src="landing-3x.png" alt="미리보기 이미지" />
+    </div>
+
+    <section class="card login-card">
+        <h1 class="logo">Instagram</h1>
+
+        <form id="loginForm" class="form" novalidate>
+            <label class="field">
+                <input
+                        class="input"
+                        type="text"
+                        name="username"
+                        placeholder="전화번호, 사용자 이름 또는 이메일"
+                        autocomplete="username"
+                        required
+                />
+            </label>
+
+            <label class="field">
+                <input
+                        class="input"
+                        type="password"
+                        name="password"
+                        placeholder="비밀번호"
+                        autocomplete="current-password"
+                        required
+                />
+            </label>
+
+            <button class="btn btn-primary" type="submit" disabled>로그인</button>
+
+            <div id="loginStatus" class="status"></div>
+
+            <div class="divider"><span>또는</span></div>
+
+            <button class="btn btn-facebook" type="button">
+                Facebook으로 로그인
+            </button>
+
+            <a class="link forgot" href="#">비밀번호를 잊으셨나요?</a>
+        </form>
+    </section>
+
+    <section class="card signup-card">
+        <p>계정이 없으신가요? <a class="link" href="#">가입하기</a></p>
+    </section>
+</main>
+
+<footer class="footer">
+    <nav class="links">
+        <a class="link" href="#">소개</a>
+        <a class="link" href="#">블로그</a>
+        <a class="link" href="#">도움말</a>
+        <a class="link" href="#">개인정보처리방침</a>
+        <a class="link" href="#">약관</a>
+    </nav>
+    <div class="meta">© 2025 Instagram from Meta</div>
+</footer>
+
+<script>
+    (function () {
+        const form = document.getElementById("loginForm");
+        const usernameInput = form.querySelector('input[name="username"]');
+        const passwordInput = form.querySelector('input[name="password"]');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const statusEl = document.getElementById("loginStatus");
+
+        function escapeHTML(s) {
+            return String(s)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function canSubmit() {
+            return (
+                usernameInput.value.trim().length > 0 &&
+                passwordInput.value.trim().length > 0
+            );
+        }
+
+        function updateButtonState() {
+            submitBtn.disabled = !canSubmit();
+        }
+
+        function setError(msg) {
+            statusEl.innerHTML =
+                '<div class="alert alert-error" role="alert">' + msg + "</div>";
+        }
+
+        function setSuccess(msg) {
+            statusEl.innerHTML =
+                '<div class="alert alert-success" role="status">' + msg + "</div>";
+        }
+
+        function setLoading(loading) {
+            submitBtn.disabled = loading || !canSubmit();
+            submitBtn.classList.toggle("btn-loading", loading);
+            submitBtn.textContent = loading ? "로그인 중..." : "로그인";
+        }
+
+        function saveSession(username) {
+            localStorage.setItem(
+                "ig_session",
+                JSON.stringify({ username, ts: Date.now() })
+            );
+        }
+
+        function getSession() {
+            try {
+                return JSON.parse(localStorage.getItem("ig_session") || "null");
+            } catch {
+                return null;
+            }
+        }
+
+        function clearSession() {
+            localStorage.removeItem("ig_session");
+        }
+
+        function showWelcome(username) {
+            const card = document.querySelector(".login-card");
+            card.innerHTML = `
+        <h1 class="logo">Instagram</h1>
+        <div class="welcome">
+          <h2>환영합니다, ${escapeHTML(username)}님!</h2>
+          <p>로그인이 완료되었습니다.</p>
+          <button id="logoutBtn" class="btn">로그아웃</button>
+        </div>
+      `;
+            document.getElementById("logoutBtn").addEventListener("click", () => {
+                clearSession();
+                location.reload();
+            });
+        }
+
+        const existing = getSession();
+        if (existing?.username) {
+            showWelcome(existing.username);
+            return;
+        }
+
+        usernameInput.addEventListener("input", updateButtonState);
+        passwordInput.addEventListener("input", updateButtonState);
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            statusEl.innerHTML = "";
+
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+
+            if (!username || !password) {
+                setError("아이디와 비밀번호를 모두 입력해 주세요.");
+                updateButtonState();
+                return;
+            }
+
+            setLoading(true);
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    setSuccess(data.message);
+                    saveSession(username);
+                    setTimeout(() => showWelcome(username), 400);
+                } else {
+                    setError(data.message);
+                    setLoading(false);
+                    updateButtonState();
+                }
+            } catch (error) {
+                setError("서버 연결 오류가 발생했습니다.");
+                setLoading(false);
+                updateButtonState();
+            }
+        });
+    })();
+</script>
+</body>
+</html>
